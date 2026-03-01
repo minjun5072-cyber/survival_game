@@ -16,13 +16,13 @@ window.addEventListener("resize", () => {
 
 /* ------------------ 이미지 ------------------ */
 const playerImg = new Image();
-playerImg.src = "./assets/player.png";
+playerImg.src = "./player.png";
 
 const enemyImg = new Image();
-enemyImg.src = "./assets/enemy1.png";
+enemyImg.src = "./enemy1.png";
 
 const bgImg = new Image();
-bgImg.src = "./assets/background.png";
+bgImg.src = "./background.png";
 
 /* ------------------ 상태 ------------------ */
 let gameState = "start";
