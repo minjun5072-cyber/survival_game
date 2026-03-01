@@ -37,7 +37,7 @@ const player = {
   x: window.innerWidth / 2,
   y: window.innerHeight - 120,
   size: 60,
-  speed: 6,
+  speed: 3,
 };
 
 let bullets = [];
@@ -55,6 +55,8 @@ let fireRate = 1000;
 let showRoundText = false;
 let roundTextScale = 1.5; // 🔥 기존보다 작게
 let roundTextTimer = 0;
+
+let lastTime = 0;
 
 /* ------------------ 능력 풀 ------------------ */
 const abilityPool = {
@@ -182,7 +184,7 @@ function startSpawning() {
 }
 
 /* ------------------ 업데이트 ------------------ */
-function update() {
+function update(delta) {
   if (showRoundText) {
     roundTextScale -= 0.01;
     roundTextTimer--;
@@ -192,7 +194,7 @@ function update() {
   if (gameState !== "playing") return;
 
   roundDuration = (10 + round + 2) * 1000;
-  roundTimer += 16;
+  roundTimer += delta;
 
   if (roundTimer >= roundDuration) {
     round++;
@@ -384,8 +386,7 @@ canvas.addEventListener("click", async (e) => {
       }
     });
   } else if (gameState === "gameover") {
-    const name = prompt("닉네임 입력");
-    await saveScore(name, score);
+    document.getElementById("nicknameModal").style.display = "flex";
     rankings = await getTopRankings();
     gameState = "ranking";
   } else if (gameState === "ranking") {
@@ -394,9 +395,25 @@ canvas.addEventListener("click", async (e) => {
 });
 
 /* ------------------ 루프 ------------------ */
-function gameLoop() {
-  update();
+function gameLoop(timestamp) {
+  if (!lastTime) lastTime = timestamp;
+  const delta = timestamp - lastTime;
+  lastTime = timestamp;
+
+  update(delta);
   draw();
+
   requestAnimationFrame(gameLoop);
 }
 gameLoop();
+
+document.getElementById("saveBtn").addEventListener("click", async () => {
+  const name = document.getElementById("nicknameInput").value.trim();
+  if (!name) return;
+
+  await saveScore(name, score);
+  rankings = await getTopRankings();
+
+  document.getElementById("nicknameModal").style.display = "none";
+  gameState = "ranking";
+});

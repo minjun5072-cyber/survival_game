@@ -22,12 +22,23 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export async function saveScore(name, score) {
-  if (!name) name = "Player";
-  await addDoc(collection(db, "rankings"), {
-    name,
-    score,
-    createdAt: Date.now(),
-  });
+  const q = query(collection(db, "rankings"), where("name", "==", name));
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    const docRef = querySnapshot.docs[0].ref;
+    const oldScore = querySnapshot.docs[0].data().score;
+
+    if (score > oldScore) {
+      await updateDoc(docRef, { score });
+    }
+  } else {
+    await addDoc(collection(db, "rankings"), {
+      name,
+      score,
+      createdAt: Date.now(),
+    });
+  }
 }
 
 export async function getTopRankings() {

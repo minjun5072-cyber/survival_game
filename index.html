@@ -5,19 +5,72 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Survival</title>
 <style>
+/* 전체 배경 및 canvas */
 body {
     margin: 0;
     overflow: hidden;
     background: black;
     touch-action: none;
 }
+
 canvas {
     display: block;
+}
+
+/* 닉네임 모달 */
+#nicknameModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modalBox {
+    background: #1e1e2f;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    width: 80%;
+    max-width: 300px;
+}
+
+.modalBox input {
+    width: 90%;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+
+.modalBox button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #2196F3;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
 }
 </style>
 </head>
 <body>
-<canvas id="game"></canvas>
-<script type="module" src="main.js"></script>
+    <!-- 닉네임 입력 모달 -->
+    <div id="nicknameModal" style="display:none;">
+        <div class="modalBox">
+            <h2>닉네임 입력</h2>
+            <input type="text" id="nicknameInput" maxlength="10" placeholder="10자 이내" />
+            <button id="saveBtn">저장</button>
+        </div>
+    </div>
+
+    <!-- 게임 canvas -->
+    <canvas id="game"></canvas>
+
+    <script type="module" src="main.js"></script>
 </body>
 </html>
